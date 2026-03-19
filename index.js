@@ -63,8 +63,8 @@ app.post("/register",async (req, res)=> {
             console.error(err);
             res.status(500).send(`登録に失敗しました<br><a href="/">戻る</a>`);
         }
-    }
-});
+
+
 
 app.listen(PORT,()=> {
     console.log(`サーバー起動: http://localhost:${PORT}`);
