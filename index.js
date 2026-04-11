@@ -2,6 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
 
+if (process.env.DATABASE_URL) {
+    const u = new URL(process.env.DATABASE_URL);
+    console.log('[DB] user:', u.username, '| host:', u.hostname, '| port:', u.port);
+} else {
+    console.log('[DB] DATABASE_URL is NOT SET');
+}
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
