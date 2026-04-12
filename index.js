@@ -42,15 +42,30 @@ app.get("/", (req, res) => {
         <html lang="ja">
         <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>名前・メッセージ登録</title>
+        <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { font-family: sans-serif; padding: 24px 16px; background: #f5f5f5; }
+            h1 { font-size: 1.3rem; margin-bottom: 20px; color: #333; }
+            form { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); max-width: 480px; margin: 0 auto; }
+            input[type="text"], textarea {
+                width: 100%; padding: 10px 12px; margin-bottom: 14px;
+                border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;
+            }
+            textarea { resize: vertical; }
+            button {
+                width: 100%; padding: 12px; background: #4f46e5; color: #fff;
+                border: none; border-radius: 6px; font-size: 1rem; cursor: pointer;
+            }
+            button:active { background: #4338ca; }
+        </style>
         </head>
         <body>
         <h1>名前・メッセージ登録フォーム</h1>
         <form method="POST" action="/register">
         <input type="text" name="userID" maxlength="20" required placeholder="名前を入力してください">
-        <br>
         <textarea name="message" placeholder="メッセージを入力してください" rows="4"></textarea>
-        <br>
         <button type="submit">送信</button>
         </form>
         </body>
