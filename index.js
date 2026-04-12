@@ -1,6 +1,15 @@
 require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+    },
+});
 
 if (process.env.DATABASE_URL) {
     const u = new URL(process.env.DATABASE_URL);
@@ -86,6 +95,14 @@ app.post("/register", async (req, res) => {
             `INSERT INTO fans(name, message) VALUES($1, $2)`,
             [userID, message]
         );
+
+        transporter.sendMail({
+            from: process.env.MAIL_USER,
+            to: 'crosstalk9011@yahoo.co.jp',
+            subject: '新しいファンメッセージが届きました',
+            text: `ファン名: ${userID}\nメッセージ: ${message}`,
+        }).catch(err => console.error('メール送信エラー:', err));
+
         res.send(`${escapeHtml(userID)}を登録しました<br><a href="/">戻る</a>`);
     } catch (err) {
         console.error(err);
