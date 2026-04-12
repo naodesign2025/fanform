@@ -84,6 +84,47 @@ app.get("/", (req, res) => {
     `);
 });
 
+app.get("/admin", async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT id, name, message FROM fans ORDER BY id DESC`);
+        const rows = result.rows.map(r => `
+            <tr>
+                <td>${escapeHtml(r.id)}</td>
+                <td>${escapeHtml(r.name)}</td>
+                <td>${escapeHtml(r.message || '')}</td>
+            </tr>`).join('');
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="ja">
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>ファン一覧</title>
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { font-family: sans-serif; padding: 24px 16px; background: #f5f5f5; }
+                h1 { font-size: 1.3rem; margin-bottom: 20px; color: #333; }
+                table { width: 100%; max-width: 640px; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+                th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.95rem; }
+                th { background: #4f46e5; color: #fff; }
+                tr:last-child td { border-bottom: none; }
+            </style>
+            </head>
+            <body>
+            <h1>ファン一覧 (${result.rows.length}件)</h1>
+            <table>
+                <thead><tr><th>ID</th><th>名前</th><th>メッセージ</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+            </body>
+            </html>
+        `);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('データ取得に失敗しました');
+    }
+});
+
 app.post("/register", async (req, res) => {
     const userID = (req.body.userID || '').trim();
     const message = (req.body.message || '').trim();
